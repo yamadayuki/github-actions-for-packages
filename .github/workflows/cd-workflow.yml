@@ -47,3 +47,22 @@ jobs:
           npm test
         env:
           CI: true
+
+  Build-And-Push-Docker-Image:
+    runs-on: ubuntu-latest
+    needs: test
+    name: Docker Build, Tag, Push
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Downloadd built artifact
+        uses: actions/download-artifact@master
+        with:
+          name: webpack artifacts
+          path: public
+      - name: Build, Tag, Push
+        uses: mattdavis0351/actions/docker-gpr@v1.3.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: tic-tac-toe
